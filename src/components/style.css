@@ -48,3 +48,8 @@
   width: 25px;
   margin: 10px;
 }
+
+.link {
+  margin: 10px;
+  text-decoration: none !important;
+}
