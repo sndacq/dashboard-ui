@@ -12,17 +12,17 @@ function Footer () {
                 <Col sm={10}/>
                 <Col sm={2}>
                     <a href="mailto:seandacquel@gmail.com">
-                        <img src={emailLogo} class="logo" alt="email"/>
+                        <img src={emailLogo} className="logo" alt="email"/>
                     </a>
                     <a href="https://www.linkedin.com/in/sean-dacquel/"  
                        target="_blank"
                        rel="noopener noreferrer">
-                        <img src={linkedinLogo} class="logo" alt="linkedin" />
+                        <img src={linkedinLogo} className="logo" alt="linkedin" />
                     </a>
                     <a href="https://github.com/sndacq"
                        target="_blank"
                        rel="noopener noreferrer">
-                        <img src={githubLogo} class="logo" alt="github" />
+                        <img src={githubLogo} className="logo" alt="github" />
                     </a>
                 </Col>
             </Row>
