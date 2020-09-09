@@ -1,22 +1,32 @@
 import React from "react";
 import { Link } from 'react-router-dom';
-import { Navbar, Nav } from "react-bootstrap";
+
+import {Typography, AppBar, Toolbar, ButtonGroup, Button} from '@material-ui/core';
+
 
 function Header() {
     return (
-        <Navbar bg="light" expand="lg">
-        <Navbar.Brand>
-            <Link className="link" to="/">Dashboard</Link>
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="mr-auto">
-                <Link className="link" to="/expenses">Expenses</Link>                    
-                <Link className="link" to="/nutrition">Nutrition</Link>
-                <Link className="link" to="/mood">Mood</Link>
-            </Nav>
-        </Navbar.Collapse>
-        </Navbar>
+        <AppBar position="static">
+            <Toolbar>
+            <Link to="/">
+                <Typography variant="h6" color="inherit">
+                    Dashboard
+                </Typography>
+            </Link>
+
+            <ButtonGroup variant="text" color="inherit" aria-label="text primary button group">
+                <Button component={Link} to="/expenses">
+                    Expenses
+                </Button>
+                <Button component={Link} to="/nutrition">
+                    Nutrition
+                </Button>
+                <Button component={Link} to="/mood">
+                    Mood
+                </Button>
+            </ButtonGroup>
+            </Toolbar>
+        </AppBar>
     ); 
 }
 
