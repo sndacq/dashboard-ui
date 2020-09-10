@@ -8,17 +8,19 @@ import Mood from "./Mood"
 
 function Body () {
     return (
-        <Switch>
-            <Route path="/expenses">
-                <Expenses />
-            </Route>
-            <Route path="/nutrition">
-                <Nutrition />
-            </Route>
-            <Route path="/mood">
-                <Mood />
-            </Route>
-        </Switch>
+        <div className="main-body">
+            <Switch>
+                <Route path="/expenses">
+                    <Expenses />
+                </Route>
+                <Route path="/nutrition">
+                    <Nutrition />
+                </Route>
+                <Route path="/mood">
+                    <Mood />
+                </Route>
+            </Switch>
+        </div>
     );   
 }
 
