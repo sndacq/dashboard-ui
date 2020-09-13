@@ -20,8 +20,8 @@ export async function updateExpense (data) {
     .catch(err => err);
 }
 
-export async function deleteExpense (data) {
-    const deleteUrl = apiUrl + `${data.id}/`
+export async function deleteExpense (id) {
+    const deleteUrl = apiUrl + `${id}/`
     return axios.delete(deleteUrl)
     .then(res => res.data)
     .catch(err => err);

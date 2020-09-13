@@ -51,7 +51,6 @@ function Expenses () {
         .then(data => {
             if ( Array.isArray(data) ) {
                 setState(data);
-                console.log(data)
             } else {
                 catchError(data)
             }
@@ -77,8 +76,8 @@ function Expenses () {
                     textColor="primary"
                     aria-label="icon tabs example"
                 >
-                    <Tab icon={<ListIcon />} aria-label="phone" />
-                    <Tab icon={<CalendarTodayIcon />} aria-label="favorite" />
+                    <Tab icon={<ListIcon />} aria-label="list" />
+                    <Tab icon={<CalendarTodayIcon />} aria-label="calendar" />
                 </Tabs>
             </Paper>
             </Grid>
