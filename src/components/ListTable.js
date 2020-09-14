@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
 
 import { IconButton, Snackbar } from '@material-ui/core';
 
@@ -18,22 +19,11 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CloseIcon from '@material-ui/icons/Close';
 
+import EntryForm from './EntryForm';
 import { deleteExpense } from '../api/ExpenseApi'
 
 
 function ListTable (props) {
-
-    const [openDeleteDialog, setOpenDeleteDialog] = useState({
-        value: false,
-        activeId: '',
-    })
-
-    const handleDeleteDialogClose = () => {
-        setOpenDeleteDialog({
-            value: false,
-            activeId: '',
-        });
-    }
 
     const [openSnackBar, setOpenSnackBar] = useState({
         value: false,
@@ -48,15 +38,14 @@ function ListTable (props) {
     }
 
     const confirmDelete = () => {
-        handleDeleteDialogClose();
-        deleteExpense(openDeleteDialog.activeId)
+        handleDialogClose();
+        deleteExpense(openDialog.activeItem.id)
         .then(data => {
             console.log(data)
             setOpenSnackBar({
                 value: true,
                 message: 'Successfully deleted entry',
             });
-            console.log(data)
         })
         .catch(err => {
             console.log(err);
@@ -67,23 +56,79 @@ function ListTable (props) {
         });
     }
 
+    const [openDialog, setOpenDialog] = useState({
+        value: false,
+        activeItem: {},
+        action: '',
+    })
+
+    const handleDialogClose = () => {
+        setOpenDialog({
+            value: false,
+            activeItem: {},
+        });
+    }
+
+    const dialogContent = () => {
+        if (openDialog.action === 'add') {
+            return (
+                <div>
+                    <DialogTitle id="alert-dialog-title">
+                        {"Add new enrty"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <EntryForm
+                            data={false}
+                            handleDialogClose={handleDialogClose}
+                            setOpenSnackBar={setOpenSnackBar}
+                        />
+                    </DialogContent>
+                </div>            );
+        }
+        else if (openDialog.action === 'edit') {
+            return (
+                <div>
+                    <DialogTitle id="alert-dialog-title">
+                        {`Edit ${openDialog.activeItem.date} entry`}
+                    </DialogTitle>
+                    <DialogContent>
+                        <EntryForm
+                            data={openDialog.activeItem}
+                            handleDialogClose={handleDialogClose}
+                            setOpenSnackBar={setOpenSnackBar}
+                        />
+                    </DialogContent>
+                </div>
+            );
+        }
+        else if (openDialog.action === 'delete') {
+
+            return (
+                <div>
+                <DialogTitle id="alert-dialog-title">
+                    {"Are you sure you want to delete this entry?"}
+                </DialogTitle>
+                <DialogActions>
+                    <Button onClick={handleDialogClose} color="primary">
+                        No
+                    </Button>
+                    <Button onClick={confirmDelete} color="primary" autoFocus>
+                        Yes
+                    </Button>
+                </DialogActions>
+                </div>
+            );
+        }
+    }
+
     return (
         <div>
         <Dialog
-            open={openDeleteDialog.value}
-            onClose={handleDeleteDialogClose}
+            id="delete-dialog"
+            open={openDialog.value}
+            onClose={handleDialogClose}
         >
-            <DialogTitle id="alert-dialog-title">
-                {"Are you sure you want to delete this entry?"}
-            </DialogTitle>
-            <DialogActions>
-                <Button onClick={handleDeleteDialogClose} color="primary">
-                    No
-                </Button>
-                <Button onClick={confirmDelete} color="primary" autoFocus>
-                    Yes
-                </Button>
-            </DialogActions>
+            {dialogContent()}
         </Dialog>
 
 
@@ -120,7 +165,7 @@ function ListTable (props) {
                 <TableBody>
                     <ListItem 
                         data={props.data} 
-                        deleteDialog={setOpenDeleteDialog}
+                        openDialog={setOpenDialog}
                     />
                 </TableBody>
             </Table>
@@ -132,24 +177,28 @@ function ListTable (props) {
 
 function ListItem (props){
 
-    const handleEdit = (id) => {
-        console.log('handleedit');
-        console.log(id);
-    }
-    const handleDelete = (id) => {
-        props.deleteDialog({
+    const handleEdit = (entry) => {
+        props.openDialog({
             value: true,
-            activeId: id,
+            activeItem: entry,
+            action: 'edit',
+        });
+    }
+    const handleDelete = (entry) => {
+        props.openDialog({
+            value: true,
+            activeItem: entry,
+            action: 'delete',
         });
     }
 
     const listItems = props.data.map((entry) => 
         <TableRow key={entry.id}>
             <TableCell align="center">
-                <IconButton onClick={() =>{ handleEdit(entry.id) }}>
+                <IconButton onClick={() =>{ handleEdit(entry) }}>
                     <EditIcon/>
                 </IconButton>
-                <IconButton onClick={() =>{ handleDelete(entry.id) }}>
+                <IconButton onClick={() =>{ handleDelete(entry) }}>
                     <DeleteIcon/>
                 </IconButton>
             </TableCell>
