@@ -8,8 +8,14 @@ function EntryForm (props) {
     const initialState = (props.data === false) ? 
     {   date: today,
         amount: '0.00',
-        account: '1',
-        category: '1',
+        account: {
+            id: '1',
+            name: 'TestAccount'
+        },
+        category: {
+            id: '1',
+            name: 'TestCategory',
+        },
         expense_type: '1'
     } : 
     {
@@ -29,8 +35,13 @@ function EntryForm (props) {
       const handleFormSubmit = (event) => {
         event.preventDefault();
         props.handleDialogClose();
+        const formData = {
+            ...state,
+            account: state.account.id,
+            category: state.category.id,
+        }
         if (props.data === false) {
-            createExpense(state)
+            createExpense(formData)
             .then(data => {
                 if(typeof data.id != "undefined") {
                     props.setOpenSnackBar({
@@ -47,7 +58,7 @@ function EntryForm (props) {
             .catch(err => showError(err));
         }
         else {
-            updateExpense(state)
+            updateExpense(formData)
             .then(data => {
                 if(typeof data.id != "undefined") {
                     props.setOpenSnackBar({
@@ -97,10 +108,10 @@ function EntryForm (props) {
             <FormControl>
                 <InputLabel id="account-select-label">Account</InputLabel>
                 <Select labelId="account-select-label" name="account"
-                value={state.account}
+                value={state.account.id}
                 onChange={handleFormChange}
                 >
-                    <MenuItem value={1}>1</MenuItem>
+                    <MenuItem value={1}>{state.account.name}</MenuItem>
                 </Select>
             </FormControl>
         </Grid>
@@ -108,10 +119,10 @@ function EntryForm (props) {
             <FormControl>
                 <InputLabel id="category">Category</InputLabel>
                 <Select labelId="category" name="category"
-                value={state.category}
+                value={state.category.id}
                 onChange={handleFormChange}
                 >
-                    <MenuItem value={1}>1</MenuItem>
+                    <MenuItem value={1}>{state.category.name}</MenuItem>
                 </Select>
             </FormControl>
         </Grid>

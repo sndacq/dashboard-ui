@@ -15,6 +15,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 
 import { IconButton, Snackbar } from '@material-ui/core';
 
+import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CloseIcon from '@material-ui/icons/Close';
@@ -66,6 +67,15 @@ function ListTable (props) {
         setOpenDialog({
             value: false,
             activeItem: {},
+            action: '',
+        });
+    }
+
+    const addEntry = () => {
+        setOpenDialog({
+            value: true,
+            activeItem: {},
+            action: 'add',
         });
     }
 
@@ -74,7 +84,7 @@ function ListTable (props) {
             return (
                 <div>
                     <DialogTitle id="alert-dialog-title">
-                        {"Add new enrty"}
+                        {"Add new entry"}
                     </DialogTitle>
                     <DialogContent>
                         <EntryForm
@@ -149,7 +159,11 @@ function ListTable (props) {
                 </React.Fragment>
         }/>
     
-
+        <Paper>
+            <Button color="primary" onClick={addEntry}>
+                Add new entry <AddIcon />
+            </Button>
+        </Paper>
         <TableContainer component={Paper}>
             <Table size="small" >
                 <TableHead>
@@ -176,6 +190,12 @@ function ListTable (props) {
 }
 
 function ListItem (props){
+    const expenseType = {
+        0: 'Income',
+        1: 'Expense',
+        3: 'Transfer',
+        4: 'Savings',
+    }
 
     const handleEdit = (entry) => {
         props.openDialog({
@@ -204,9 +224,9 @@ function ListItem (props){
             </TableCell>
 
             <TableCell align="left"> {entry.date} </TableCell>
-            <TableCell align="left"> {entry.account} </TableCell>
-            <TableCell align="left"> {entry.category} </TableCell>
-            <TableCell align="left"> {entry.expense_type} </TableCell>
+            <TableCell align="left"> {entry.account.name} </TableCell>
+            <TableCell align="left"> {entry.category.name} </TableCell>
+            <TableCell align="left"> {expenseType[entry.expense_type]} </TableCell>
             <TableCell align="right" > {entry.amount} </TableCell>
         </TableRow>
     );

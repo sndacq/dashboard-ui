@@ -66,21 +66,24 @@ function Expenses () {
     return (
         // TODO: add react router
         <div>
-            <Grid xs={3}>
-            <Paper square>
-                <Tabs
-                    value={tabValue}
-                    onChange={handleTabChange}
-                    variant="fullWidth"
-                    indicatorColor="primary"
-                    textColor="primary"
-                    aria-label="icon tabs example"
-                >
-                    <Tab icon={<ListIcon />} aria-label="list" />
-                    <Tab icon={<CalendarTodayIcon />} aria-label="calendar" />
-                </Tabs>
-            </Paper>
-            </Grid>
+            <Grid container>
+                <Grid xs={9}/>
+                <Grid xs={3} className="header-tab">
+                <Paper square>
+                    <Tabs
+                        value={tabValue}
+                        onChange={handleTabChange}
+                        variant="fullWidth"
+                        indicatorColor="primary"
+                        textColor="primary"
+                        aria-label="icon tabs example"
+                    >
+                        <Tab icon={<ListIcon />} aria-label="list" />
+                        <Tab icon={<CalendarTodayIcon />} aria-label="calendar" />
+                    </Tabs>
+                </Paper>
+                </Grid>
+        </Grid>
             <TabPanel value={tabValue} index={0}>
                 <ListTable data={state}/>
             </TabPanel>
