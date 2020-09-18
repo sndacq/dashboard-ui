@@ -14,49 +14,32 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 
-import { IconButton, Snackbar } from '@material-ui/core';
-
 import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import CloseIcon from '@material-ui/icons/Close';
 
-import { selectExpense } from './expenseSlice'
-import EntryForm from './EntryForm';
-import { deleteExpense } from '../../api/ExpenseApi'
+import ExpenseForm from './ExpenseForm';
+import ExpenseListItem from './ExpenseListItem';
+
+import { selectExpense } from './expenseSlice';
+import { showAlertNotification } from '../core/coreSlice';
+import { deleteExpense } from '../../api/ExpenseApi';
 
 
 function ExpenseList () {
+    const dispatch = useDispatch();
     const expenseData = useSelector(selectExpense, shallowEqual);
 
-    const [openSnackBar, setOpenSnackBar] = useState({
-        value: false,
-        message: '',
-    });
-
-    const handleSnackBarClose = () => {
-        setOpenSnackBar({
-            value: false,
-            message: '',
-        });
-    }
-
     const confirmDelete = () => {
+        let message = 'Successfully deleted entry';
         handleDialogClose();
         deleteExpense(openDialog.activeItem.id)
         .then(data => {
             console.log(data)
-            setOpenSnackBar({
-                value: true,
-                message: 'Successfully deleted entry',
-            });
+            dispatch(showAlertNotification(message));
         })
         .catch(err => {
             console.log(err);
-            setOpenSnackBar({
-                value: true,
-                message: 'Failed to delete entry',
-            });
+            message = 'Failed to delete entry';
+            dispatch(showAlertNotification(message));
         });
     }
 
@@ -90,10 +73,9 @@ function ExpenseList () {
                         {"Add new entry"}
                     </DialogTitle>
                     <DialogContent>
-                        <EntryForm
+                        <ExpenseForm
                             data={false}
                             handleDialogClose={handleDialogClose}
-                            setOpenSnackBar={setOpenSnackBar}
                         />
                     </DialogContent>
                 </div>            );
@@ -105,10 +87,9 @@ function ExpenseList () {
                         {`Edit ${openDialog.activeItem.date} entry`}
                     </DialogTitle>
                     <DialogContent>
-                        <EntryForm
+                        <ExpenseForm
                             data={openDialog.activeItem}
                             handleDialogClose={handleDialogClose}
-                            setOpenSnackBar={setOpenSnackBar}
                         />
                     </DialogContent>
                 </div>
@@ -143,25 +124,6 @@ function ExpenseList () {
         >
             {dialogContent()}
         </Dialog>
-
-
-        <Snackbar
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                open={openSnackBar.value}
-                autoHideDuration={5000}
-                onClose={handleSnackBarClose}
-                message={openSnackBar.message}
-                action={
-                <React.Fragment>
-                    <IconButton size="small" color="inherit" onClick={handleSnackBarClose}>
-                        <CloseIcon fontSize="small" />
-                    </IconButton>
-                </React.Fragment>
-        }/>
-    
         <Paper>
             <Button color="primary" onClick={addEntry}>
                 Add new entry <AddIcon />
@@ -180,7 +142,7 @@ function ExpenseList () {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    <ListItem 
+                    <ExpenseListItem 
                         data={expenseData} 
                         openDialog={setOpenDialog}
                     />
@@ -189,52 +151,6 @@ function ExpenseList () {
         </TableContainer>
         </div>
     );
-
-}
-
-function ListItem (props){
-    const {openDialog, data } = props;
-    const expenseType = {
-        0: 'Income',
-        1: 'Expense',
-        3: 'Transfer',
-        4: 'Savings',
-    }
-
-    const handleEdit = (entry) => {
-        openDialog({
-            value: true,
-            activeItem: entry,
-            action: 'edit',
-        });
-    }
-    const handleDelete = (entry) => {
-        openDialog({
-            value: true,
-            activeItem: entry,
-            action: 'delete',
-        });
-    }
-
-    const listItems = data.map((entry) => 
-        <TableRow key={entry.id}>
-            <TableCell align="center">
-                <IconButton onClick={() =>{ handleEdit(entry) }}>
-                    <EditIcon/>
-                </IconButton>
-                <IconButton onClick={() =>{ handleDelete(entry) }}>
-                    <DeleteIcon/>
-                </IconButton>
-            </TableCell>
-
-            <TableCell align="left"> {entry.date} </TableCell>
-            <TableCell align="left"> {entry.account.name} </TableCell>
-            <TableCell align="left"> {entry.category.name} </TableCell>
-            <TableCell align="left"> {expenseType[entry.expense_type]} </TableCell>
-            <TableCell align="right" > {entry.amount} </TableCell>
-        </TableRow>
-    );
-    return listItems;
 }
 
 export default ExpenseList;
