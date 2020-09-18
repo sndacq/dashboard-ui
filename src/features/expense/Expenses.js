@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { Paper, Tabs, Tab, Grid, Box, Typography} from '@material-ui/core';
@@ -6,8 +6,7 @@ import { Paper, Tabs, Tab, Grid, Box, Typography} from '@material-ui/core';
 import ListIcon from '@material-ui/icons/List';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 
-import { getExpense } from '../api/ExpenseApi'
-import ListTable from './ListTable';
+import ExpenseList from './ExpenseList';
 
 
 function TabPanel(props) {
@@ -43,26 +42,6 @@ function Expenses () {
         setTabValue(newValue);
       };
 
-    // TODO: handle failed api call
-
-    const [state, setState] = useState([]);
-    useEffect(() => {
-        getExpense()
-        .then(data => {
-            if ( Array.isArray(data) ) {
-                setState(data);
-            } else {
-                catchError(data)
-            }
-        })
-        .catch(err => catchError(err));
-    }, []);
-
-    const catchError = message => {
-        setState([]);
-        console.log(message);
-    }
-
     return (
         // TODO: add react router
         <div>
@@ -83,9 +62,9 @@ function Expenses () {
                     </Tabs>
                 </Paper>
                 </Grid>
-        </Grid>
+            </Grid>
             <TabPanel value={tabValue} index={0}>
-                <ListTable data={state}/>
+                <ExpenseList />
             </TabPanel>
             <TabPanel value={tabValue} index={1}>
                 Calendar View

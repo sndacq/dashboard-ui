@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -20,11 +21,13 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CloseIcon from '@material-ui/icons/Close';
 
+import { selectExpense } from './expenseSlice'
 import EntryForm from './EntryForm';
-import { deleteExpense } from '../api/ExpenseApi'
+import { deleteExpense } from '../../api/ExpenseApi'
 
 
-function ListTable (props) {
+function ExpenseList () {
+    const expenseData = useSelector(selectExpense, shallowEqual);
 
     const [openSnackBar, setOpenSnackBar] = useState({
         value: false,
@@ -134,7 +137,7 @@ function ListTable (props) {
     return (
         <div>
         <Dialog
-            id="delete-dialog"
+            id="dialog"
             open={openDialog.value}
             onClose={handleDialogClose}
         >
@@ -178,7 +181,7 @@ function ListTable (props) {
                 </TableHead>
                 <TableBody>
                     <ListItem 
-                        data={props.data} 
+                        data={expenseData} 
                         openDialog={setOpenDialog}
                     />
                 </TableBody>
@@ -190,6 +193,7 @@ function ListTable (props) {
 }
 
 function ListItem (props){
+    const {openDialog, data } = props;
     const expenseType = {
         0: 'Income',
         1: 'Expense',
@@ -198,21 +202,21 @@ function ListItem (props){
     }
 
     const handleEdit = (entry) => {
-        props.openDialog({
+        openDialog({
             value: true,
             activeItem: entry,
             action: 'edit',
         });
     }
     const handleDelete = (entry) => {
-        props.openDialog({
+        openDialog({
             value: true,
             activeItem: entry,
             action: 'delete',
         });
     }
 
-    const listItems = props.data.map((entry) => 
+    const listItems = data.map((entry) => 
         <TableRow key={entry.id}>
             <TableCell align="center">
                 <IconButton onClick={() =>{ handleEdit(entry) }}>
@@ -233,4 +237,4 @@ function ListItem (props){
     return listItems;
 }
 
-export default ListTable;
+export default ExpenseList;

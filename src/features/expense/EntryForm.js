@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, FormControl, InputLabel,
          Select, MenuItem, Grid, Button } from '@material-ui/core';
-import { createExpense, updateExpense } from '../api/ExpenseApi';
+import { createExpense, updateExpense } from '../../api/ExpenseApi';
 
 function EntryForm (props) {
     const today = new Date().toISOString().split('T')[0];
