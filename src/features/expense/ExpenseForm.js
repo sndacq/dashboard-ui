@@ -1,23 +1,37 @@
 import React, { useState } from 'react';
+import {  useDispatch } from 'react-redux';
+
 import { TextField, FormControl, InputLabel,
          Select, MenuItem, Grid, Button } from '@material-ui/core';
-import { createExpense, updateExpense } from '../api/ExpenseApi';
 
-function EntryForm (props) {
+
+import { createExpense, updateExpense } from '../../api/ExpenseApi';
+import { showAlertNotification } from '../core/coreSlice';
+
+function ExpenseForm (props) {
+    const { data, handleDialogClose } = props;
+    const dispatch = useDispatch();
+    
+
     const today = new Date().toISOString().split('T')[0];
-    const initialState = (props.data === false) ? 
+    const initialState = (data === false) ? 
     {   date: today,
         amount: '0.00',
-        account: '1',
-        category: '1',
+        account: {
+            id: '1',
+            name: 'TestAccount'
+        },
+        category: {
+            id: '1',
+            name: 'TestCategory',
+        },
         expense_type: '1'
     } : 
-    {
-        ...props.data,
-    };
+    { ...data };
+
     const [state, setState] = useState(initialState);
     
-      const handleFormChange = (event) => {
+    const handleFormChange = (event) => {
         const name = event.target.name;
         setState({
           ...state,
@@ -26,17 +40,19 @@ function EntryForm (props) {
       };
 
 
-      const handleFormSubmit = (event) => {
+    const handleFormSubmit = (event) => {
         event.preventDefault();
-        props.handleDialogClose();
-        if (props.data === false) {
-            createExpense(state)
+        handleDialogClose();
+        const formData = {
+            ...state,
+            account: state.account.id,
+            category: state.category.id,
+        }
+        if (data === false) {
+            createExpense(formData)
             .then(data => {
                 if(typeof data.id != "undefined") {
-                    props.setOpenSnackBar({
-                        message: 'Entry succesfully created',
-                        value: true,
-                    });
+                    dispatch(showAlertNotification('Entry succesfully created'));
                     console.log(data)
                 }
                 else {
@@ -47,13 +63,10 @@ function EntryForm (props) {
             .catch(err => showError(err));
         }
         else {
-            updateExpense(state)
+            updateExpense(formData)
             .then(data => {
                 if(typeof data.id != "undefined") {
-                    props.setOpenSnackBar({
-                        message: 'Entry succesfully updated',
-                        value: true,
-                    });
+                    dispatch(showAlertNotification('Entry succesfully updated'));
                     console.log(data)
                 }
                 else {
@@ -66,10 +79,7 @@ function EntryForm (props) {
     };
 
     const showError = message => {
-        props.setOpenSnackBar({
-            message: message,
-            value: true,
-        });
+        dispatch(showAlertNotification(message));
         console.log(message)
     }
 
@@ -97,10 +107,10 @@ function EntryForm (props) {
             <FormControl>
                 <InputLabel id="account-select-label">Account</InputLabel>
                 <Select labelId="account-select-label" name="account"
-                value={state.account}
+                value={state.account.id}
                 onChange={handleFormChange}
                 >
-                    <MenuItem value={1}>1</MenuItem>
+                    <MenuItem value={1}>{state.account.name}</MenuItem>
                 </Select>
             </FormControl>
         </Grid>
@@ -108,10 +118,10 @@ function EntryForm (props) {
             <FormControl>
                 <InputLabel id="category">Category</InputLabel>
                 <Select labelId="category" name="category"
-                value={state.category}
+                value={state.category.id}
                 onChange={handleFormChange}
                 >
-                    <MenuItem value={1}>1</MenuItem>
+                    <MenuItem value={1}>{state.category.name}</MenuItem>
                 </Select>
             </FormControl>
         </Grid>
@@ -136,4 +146,4 @@ function EntryForm (props) {
     );
 }
 
-export default EntryForm;
+export default ExpenseForm;

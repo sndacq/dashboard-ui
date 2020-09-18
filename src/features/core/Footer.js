@@ -2,9 +2,9 @@ import React from 'react';
 
 import { Grid } from '@material-ui/core';
 
-import githubLogo from '../static/github.svg';
-import emailLogo from '../static/email.svg';
-import linkedinLogo from '../static/linkedin.svg';
+import githubLogo from '../../static/github.svg';
+import emailLogo from '../../static/email.svg';
+import linkedinLogo from '../../static/linkedin.svg';
 
 
 

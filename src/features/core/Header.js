@@ -6,7 +6,7 @@ import {Typography, AppBar, Toolbar, ButtonGroup, Button} from '@material-ui/cor
 
 function Header() {
     return (
-        <AppBar position="absolute">
+        <AppBar position="static">
             <Toolbar>
             <Link to="/">
                 <Typography variant="h6" color="inherit">
