@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
 import Table from '@material-ui/core/Table';
@@ -19,19 +19,33 @@ import AddIcon from '@material-ui/icons/Add';
 import ExpenseForm from './ExpenseForm';
 import ExpenseListItem from './ExpenseListItem';
 
-import { selectExpense } from './expenseSlice';
-import { showAlertNotification } from '../core/coreSlice';
 import { deleteExpense } from '../../api/ExpenseApi';
+
+
+import { selectExpense } from './expenseSlice';
+import {
+    showAlertNotification,
+    showAppDialog,
+    hideAppDialog,
+    selectDialog,
+ } from '../core/coreSlice';
 
 
 function ExpenseList () {
     const dispatch = useDispatch();
     const expenseData = useSelector(selectExpense, shallowEqual);
+    const dialogData = useSelector(selectDialog, shallowEqual);
+
+    const handleDialogClose = () => { dispatch(hideAppDialog()) };
+
+    const addEntry = () => {
+        dispatch(showAppDialog({effect: 'add'}));
+    }
 
     const confirmDelete = () => {
         let message = 'Successfully deleted entry';
         handleDialogClose();
-        deleteExpense(openDialog.activeItem.id)
+        deleteExpense(dialogData.activeItem.id)
         .then(data => {
             console.log(data)
             dispatch(showAlertNotification(message));
@@ -43,87 +57,54 @@ function ExpenseList () {
         });
     }
 
-    const [openDialog, setOpenDialog] = useState({
-        value: false,
-        activeItem: {},
-        action: '',
-    })
-
-    const handleDialogClose = () => {
-        setOpenDialog({
-            value: false,
-            activeItem: {},
-            action: '',
-        });
-    }
-
-    const addEntry = () => {
-        setOpenDialog({
-            value: true,
-            activeItem: {},
-            action: 'add',
-        });
-    }
-
-    const dialogContent = () => {
-        if (openDialog.action === 'add') {
-            return (
-                <div>
-                    <DialogTitle id="alert-dialog-title">
-                        {"Add new entry"}
-                    </DialogTitle>
+    let dialogTitle = ''
+    const renderDialog = () => {
+        switch (dialogData.effect) {
+            case 'add':
+                dialogTitle = 'Add new entry';
+                return (
+                    <div>
+                    <DialogTitle>{dialogTitle}</DialogTitle>
                     <DialogContent>
-                        <ExpenseForm
-                            data={false}
-                            handleDialogClose={handleDialogClose}
-                        />
+                        <ExpenseForm data={false} />
                     </DialogContent>
-                </div>            );
-        }
-        else if (openDialog.action === 'edit') {
-            return (
-                <div>
-                    <DialogTitle id="alert-dialog-title">
-                        {`Edit ${openDialog.activeItem.date} entry`}
-                    </DialogTitle>
-                    <DialogContent>
-                        <ExpenseForm
-                            data={openDialog.activeItem}
-                            handleDialogClose={handleDialogClose}
-                        />
-                    </DialogContent>
-                </div>
-            );
-        }
-        else if (openDialog.action === 'delete') {
+                    </div>
 
-            return (
-                <div>
-                <DialogTitle id="alert-dialog-title">
-                    {"Are you sure you want to delete this entry?"}
-                </DialogTitle>
-                <DialogActions>
-                    <Button onClick={handleDialogClose} color="primary">
-                        No
-                    </Button>
-                    <Button onClick={confirmDelete} color="primary" autoFocus>
-                        Yes
-                    </Button>
-                </DialogActions>
-                </div>
-            );
+                );
+
+            case 'edit': 
+                dialogTitle = `Edit ${dialogData.activeItem.date} entry`;
+                return (
+                    <div>
+                    <DialogTitle>{dialogTitle}</DialogTitle>
+                    <DialogContent>
+                        <ExpenseForm data={dialogData.activeItem}/>
+                    </DialogContent>
+                    </div>
+
+                );
+
+            case 'delete':
+                dialogTitle = 'Are you sure you want to delete this entry?';
+                return (
+                    <div>
+                    <DialogTitle>{dialogTitle}</DialogTitle>
+                    <DialogActions>
+                        <Button onClick={handleDialogClose} color="primary">
+                            No
+                        </Button>
+                        <Button onClick={confirmDelete} color="primary" autoFocus>
+                            Yes
+                        </Button>
+                    </DialogActions>
+                    </div>
+                );
+            default:
         }
     }
 
     return (
         <div>
-        <Dialog
-            id="dialog"
-            open={openDialog.value}
-            onClose={handleDialogClose}
-        >
-            {dialogContent()}
-        </Dialog>
         <Paper>
             <Button color="primary" onClick={addEntry}>
                 Add new entry <AddIcon />
@@ -142,13 +123,13 @@ function ExpenseList () {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    <ExpenseListItem 
-                        data={expenseData} 
-                        openDialog={setOpenDialog}
-                    />
+                    <ExpenseListItem data={expenseData} />
                 </TableBody>
             </Table>
         </TableContainer>
+        <Dialog open={dialogData.value} onClose={handleDialogClose}>
+            {renderDialog()}
+        </Dialog>
         </div>
     );
 }

@@ -1,15 +1,25 @@
 import React, { useState } from 'react';
 import {  useDispatch } from 'react-redux';
 
-import { TextField, FormControl, InputLabel,
-         Select, MenuItem, Grid, Button } from '@material-ui/core';
+import {
+    TextField,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    Grid,
+    Button
+} from '@material-ui/core';
 
 
 import { createExpense, updateExpense } from '../../api/ExpenseApi';
-import { showAlertNotification } from '../core/coreSlice';
+import {
+    showAlertNotification,
+    hideAppDialog
+} from '../core/coreSlice';
 
 function ExpenseForm (props) {
-    const { data, handleDialogClose } = props;
+    const { data } = props;
     const dispatch = useDispatch();
     
 
@@ -26,8 +36,7 @@ function ExpenseForm (props) {
             name: 'TestCategory',
         },
         expense_type: '1'
-    } : 
-    { ...data };
+    } : { ...data };
 
     const [state, setState] = useState(initialState);
     
@@ -42,7 +51,7 @@ function ExpenseForm (props) {
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
-        handleDialogClose();
+        dispatch(hideAppDialog());
         const formData = {
             ...state,
             account: state.account.id,
@@ -72,7 +81,6 @@ function ExpenseForm (props) {
                 else {
                     showError(data)
                 }
-        
             })
             .catch(err => showError(err));
         }

@@ -1,4 +1,6 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import IconButton from '@material-ui/core/IconButton';
@@ -6,9 +8,13 @@ import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
+import { showAppDialog } from '../core/coreSlice';
 
-function ExpenseListItem (props){
-    const {openDialog, data } = props;
+function ExpenseListItem (props) {
+    const { data } = props;
+
+    const dispatch = useDispatch();
+
     const expenseType = {
         0: 'Income',
         1: 'Expense',
@@ -17,18 +23,20 @@ function ExpenseListItem (props){
     }
 
     const handleEdit = (entry) => {
-        openDialog({
-            value: true,
-            activeItem: entry,
-            action: 'edit',
-        });
+        dispatch(
+            showAppDialog({
+                effect: 'edit',
+                activeItem: entry,
+            })
+        );
     }
     const handleDelete = (entry) => {
-        openDialog({
-            value: true,
-            activeItem: entry,
-            action: 'delete',
-        });
+        dispatch(
+            showAppDialog({
+                effect: 'delete',
+                activeItem: entry,
+            })
+        );
     }
 
     const listItems = data.map((entry) => 
