@@ -21,25 +21,23 @@ import ExpenseListItem from './ExpenseListItem';
 
 import { deleteExpense } from '../../api/ExpenseApi';
 
-
-import { selectExpense } from './expenseSlice';
 import {
-    showAlertNotification,
-    showAppDialog,
-    hideAppDialog,
+    selectExpense,
+    showDialog,
+    hideDialog,
     selectDialog,
- } from '../core/coreSlice';
-
+} from './expenseSlice';
+import { showAlertNotification } from '../core/coreSlice';
 
 function ExpenseList () {
     const dispatch = useDispatch();
     const expenseData = useSelector(selectExpense, shallowEqual);
     const dialogData = useSelector(selectDialog, shallowEqual);
 
-    const handleDialogClose = () => { dispatch(hideAppDialog()) };
+    const handleDialogClose = () => { dispatch(hideDialog()) };
 
     const addEntry = () => {
-        dispatch(showAppDialog({effect: 'add'}));
+        dispatch(showDialog({effect: 'add'}));
     }
 
     const confirmDelete = () => {

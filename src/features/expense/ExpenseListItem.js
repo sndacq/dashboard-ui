@@ -8,7 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-import { showAppDialog } from '../core/coreSlice';
+import { showDialog } from './expenseSlice';
 
 function ExpenseListItem (props) {
     const { data } = props;
@@ -24,7 +24,7 @@ function ExpenseListItem (props) {
 
     const handleEdit = (entry) => {
         dispatch(
-            showAppDialog({
+            showDialog({
                 effect: 'edit',
                 activeItem: entry,
             })
@@ -32,7 +32,7 @@ function ExpenseListItem (props) {
     }
     const handleDelete = (entry) => {
         dispatch(
-            showAppDialog({
+            showDialog({
                 effect: 'delete',
                 activeItem: entry,
             })

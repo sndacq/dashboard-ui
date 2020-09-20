@@ -13,10 +13,9 @@ import {
 
 
 import { createExpense, updateExpense } from '../../api/ExpenseApi';
-import {
-    showAlertNotification,
-    hideAppDialog
-} from '../core/coreSlice';
+import { showAlertNotification } from '../core/coreSlice';
+import { hideDialog } from './expenseSlice';
+
 
 function ExpenseForm (props) {
     const { data } = props;
@@ -51,7 +50,7 @@ function ExpenseForm (props) {
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
-        dispatch(hideAppDialog());
+        dispatch(hideDialog());
         const formData = {
             ...state,
             account: state.account.id,

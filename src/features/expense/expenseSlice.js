@@ -5,20 +5,45 @@ import { getExpense } from '../../api/ExpenseApi';
 
 const expenseSlice = createSlice({
     name: 'expense',
-    initialState: [],
+    initialState: {
+        list: [],
+        dialog: {
+            value: false,
+        }
+    },
     reducers: {
         updateExpenseList(state, action) {
             const data = action.payload;
-            data.map(element => state.push(element));
+            data.map(element => state.list.push(element));
         },
         addExpense(state, action) {
             const { data } = action.payload;
-            state.push(data)
+            state.list.push(data)
         },
+        showDialog(state, action) {
+            const { effect, activeItem } = action.payload;
+            state.dialog = {
+                value: true,
+                activeItem,
+                effect,
+            }
+        },
+        hideDialog(state) {
+            state.dialog = {
+                value: false,
+                activeItem: {},
+                effect: '',
+            }
+        }
     }
 });
 
-export const { updateExpenseList, addExpense } = expenseSlice.actions;
+export const {
+    updateExpenseList,
+    addExpense,
+    showDialog,
+    hideDialog,
+} = expenseSlice.actions;
 
 export const fetchExpense = () => dispatch => {
     getExpense()
@@ -30,6 +55,7 @@ export const fetchExpense = () => dispatch => {
     });
   };
 
-export const selectExpense = state => state.expenses;
+export const selectExpense = state => state.expenses.list;
+export const selectDialog = state => state.expenses.dialog;
 
 export default expenseSlice.reducer;
