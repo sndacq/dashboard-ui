@@ -7,7 +7,7 @@ import Footer from "../features/core/Footer";
 import AlertNotification from "../features/core/AlertNotification";
 
 import Expenses from "../features/expense/Expenses";
-import { fetchExpense } from "../features/expense/expenseSlice";
+import { fetchExpenseApi } from "../features/expense/expenseSlice";
 
 import Nutrition from "../features/nutrition/Nutrition";
 import Mood from "../features/mood/Mood";
@@ -18,7 +18,7 @@ function App () {
     const dispatch = useDispatch();
 
     useEffect (() => {
-        dispatch(fetchExpense());
+        dispatch(fetchExpenseApi());
     });
 
     return (

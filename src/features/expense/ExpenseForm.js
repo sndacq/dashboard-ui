@@ -11,10 +11,11 @@ import {
     Button
 } from '@material-ui/core';
 
-
-import { createExpense, updateExpense } from '../../api/ExpenseApi';
-import { showAlertNotification } from '../core/coreSlice';
-import { hideDialog } from './expenseSlice';
+import {
+    addExpenseApi,
+    editExpenseApi,
+    hideDialog
+ } from './expenseSlice';
 
 
 function ExpenseForm (props) {
@@ -57,38 +58,12 @@ function ExpenseForm (props) {
             category: state.category.id,
         }
         if (data === false) {
-            createExpense(formData)
-            .then(data => {
-                if(typeof data.id != "undefined") {
-                    dispatch(showAlertNotification('Entry succesfully created'));
-                    console.log(data)
-                }
-                else {
-                    showError(data)
-                }
-        
-            })
-            .catch(err => showError(err));
+            dispatch(addExpenseApi(formData));
         }
         else {
-            updateExpense(formData)
-            .then(data => {
-                if(typeof data.id != "undefined") {
-                    dispatch(showAlertNotification('Entry succesfully updated'));
-                    console.log(data)
-                }
-                else {
-                    showError(data)
-                }
-            })
-            .catch(err => showError(err));
+            dispatch(editExpenseApi(formData));
         }
     };
-
-    const showError = message => {
-        dispatch(showAlertNotification(message));
-        console.log(message)
-    }
 
     return(
         <form className="form" noValidate onSubmit={handleFormSubmit}>

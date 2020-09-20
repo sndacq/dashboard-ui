@@ -19,15 +19,14 @@ import AddIcon from '@material-ui/icons/Add';
 import ExpenseForm from './ExpenseForm';
 import ExpenseListItem from './ExpenseListItem';
 
-import { deleteExpense } from '../../api/ExpenseApi';
-
 import {
     selectExpense,
+    deleteExpenseApi,
     showDialog,
     hideDialog,
     selectDialog,
 } from './expenseSlice';
-import { showAlertNotification } from '../core/coreSlice';
+
 
 function ExpenseList () {
     const dispatch = useDispatch();
@@ -41,18 +40,8 @@ function ExpenseList () {
     }
 
     const confirmDelete = () => {
-        let message = 'Successfully deleted entry';
         handleDialogClose();
-        deleteExpense(dialogData.activeItem.id)
-        .then(data => {
-            console.log(data)
-            dispatch(showAlertNotification(message));
-        })
-        .catch(err => {
-            console.log(err);
-            message = 'Failed to delete entry';
-            dispatch(showAlertNotification(message));
-        });
+        dispatch(deleteExpenseApi(dialogData.activeItem.id));
     }
 
     let dialogTitle = ''
