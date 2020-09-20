@@ -26,3 +26,15 @@ export async function deleteExpense (id) {
     .then(res => res.data)
     .catch(err => err);
 }
+
+export async function getCategory () {
+    return axios.get(`${apiUrl}category/`)
+    .then(res => res.data)
+    .catch(err => err);
+}
+
+export async function getAccount () {
+    return axios.get(`${apiUrl}account/`)
+    .then(res => res.data)
+    .catch(err => err);
+}

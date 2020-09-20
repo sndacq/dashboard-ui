@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {  useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import {
     TextField,
@@ -14,6 +14,8 @@ import {
 import {
     addExpenseApi,
     editExpenseApi,
+    selectCategory,
+    selectAccount,
     hideDialog
  } from './expenseSlice';
 
@@ -21,20 +23,17 @@ import {
 function ExpenseForm (props) {
     const { data } = props;
     const dispatch = useDispatch();
-    
+
+    const categoryList = useSelector(selectCategory);
+    const accountList = useSelector(selectAccount);
+
 
     const today = new Date().toISOString().split('T')[0];
     const initialState = (data === false) ? 
     {   date: today,
         amount: '0.00',
-        account: {
-            id: '1',
-            name: 'TestAccount'
-        },
-        category: {
-            id: '1',
-            name: 'TestCategory',
-        },
+        account: accountList[0].id,
+        category: categoryList[0].id,
         expense_type: '1'
     } : { ...data };
 
@@ -42,10 +41,13 @@ function ExpenseForm (props) {
     
     const handleFormChange = (event) => {
         const name = event.target.name;
+        console.log(state);
+        console.log(state);
         setState({
           ...state,
           [name]: event.target.value,
         });
+        console.log(state);
       };
 
 
@@ -54,8 +56,6 @@ function ExpenseForm (props) {
         dispatch(hideDialog());
         const formData = {
             ...state,
-            account: state.account.id,
-            category: state.category.id,
         }
         if (data === false) {
             dispatch(addExpenseApi(formData));
@@ -87,23 +87,35 @@ function ExpenseForm (props) {
         </Grid>
         <Grid item xs={6}>
             <FormControl>
-                <InputLabel id="account-select-label">Account</InputLabel>
-                <Select labelId="account-select-label" name="account"
-                value={state.account.id}
+                <InputLabel id="category">Category</InputLabel>
+                <Select labelId="category" name="category"
+                value={state.category}
                 onChange={handleFormChange}
                 >
-                    <MenuItem value={1}>{state.account.name}</MenuItem>
+                    {categoryList.map(category => {
+                        return (
+                            <MenuItem value={category.id}>
+                                {category.name}
+                            </MenuItem>)
+                        ;
+                    })}
                 </Select>
             </FormControl>
         </Grid>
         <Grid item xs={6}>
             <FormControl>
-                <InputLabel id="category">Category</InputLabel>
-                <Select labelId="category" name="category"
-                value={state.category.id}
+                <InputLabel id="account-select-label">Account</InputLabel>
+                <Select labelId="account-select-label" name="account"
+                value={state.account}
                 onChange={handleFormChange}
                 >
-                    <MenuItem value={1}>{state.category.name}</MenuItem>
+                    {accountList.map(account => {
+                        return(
+                            <MenuItem value={account.id}>
+                                {account.name}
+                            </MenuItem>
+                        );
+                    })}
                 </Select>
             </FormControl>
         </Grid>

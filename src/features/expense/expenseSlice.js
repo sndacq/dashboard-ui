@@ -7,6 +7,8 @@ import {
     createExpense,
     updateExpense,
     deleteExpense,
+    getCategory,
+    getAccount,
 } from '../../api/ExpenseApi';
 
 
@@ -16,7 +18,9 @@ const expenseSlice = createSlice({
         list: [],
         dialog: {
             value: false,
-        }
+        },
+        categories: [],
+        accounts: [],
     },
     reducers: {
         updateExpenseList(state, action) {
@@ -36,6 +40,14 @@ const expenseSlice = createSlice({
             const id = action.payload;
             const filteredList = state.list.filter(item => item.id !== id);
             state.list = filteredList;
+        },
+        updateCategoryList(state, action) {
+            const data = action.payload;
+            data.map(element => state.categories.push(element));
+        },
+        updateAccountList(state, action) {
+            const data = action.payload;
+            data.map(element => state.accounts.push(element));
         },
         showDialog(state, action) {
             const { effect, activeItem } = action.payload;
@@ -60,6 +72,8 @@ export const {
     addExpense,
     editExpense,
     removeExpense,
+    updateCategoryList,
+    updateAccountList,
     showDialog,
     hideDialog,
 } = expenseSlice.actions;
@@ -116,7 +130,29 @@ export const deleteExpenseApi = (id) => dispatch => {
     });
 };
 
+export const fetchCategoryApi = () => dispatch => {
+    getCategory()
+    .then(res => {
+        dispatch(updateCategoryList(res));
+    })
+    .catch(err => {
+        console.log(err);
+    });
+};
+
+export const fetchAccountApi = () => dispatch => {
+    getAccount()
+    .then(res => {
+        dispatch(updateAccountList(res));
+    })
+    .catch(err => {
+        console.log(err);
+    });
+};
+
 export const selectExpense = state => state.expenses.list;
+export const selectCategory = state => state.expenses.categories;
+export const selectAccount = state => state.expenses.accounts;
 export const selectDialog = state => state.expenses.dialog;
 
 export default expenseSlice.reducer;

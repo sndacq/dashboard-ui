@@ -7,7 +7,11 @@ import Footer from "../features/core/Footer";
 import AlertNotification from "../features/core/AlertNotification";
 
 import Expenses from "../features/expense/Expenses";
-import { fetchExpenseApi } from "../features/expense/expenseSlice";
+import {
+    fetchExpenseApi,
+    fetchCategoryApi,
+    fetchAccountApi
+} from "../features/expense/expenseSlice";
 
 import Nutrition from "../features/nutrition/Nutrition";
 import Mood from "../features/mood/Mood";
@@ -19,6 +23,8 @@ function App () {
 
     useEffect (() => {
         dispatch(fetchExpenseApi());
+        dispatch(fetchCategoryApi());
+        dispatch(fetchAccountApi());
     });
 
     return (
