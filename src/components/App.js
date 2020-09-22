@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 
 import Header from "../features/core/Header";
 import Footer from "../features/core/Footer";
+import Dashboard from "../features/core/Dashboard";
 import AlertNotification from "../features/core/AlertNotification";
 
 import Expenses from "../features/expense/Expenses";
@@ -31,6 +32,9 @@ function App () {
         <Router>
             <Header />
             <Switch>
+                <Route path="/home">
+                    <Dashboard />
+                </Route>
                 <Route path="/expenses">
                     <Expenses />
                 </Route>

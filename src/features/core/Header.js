@@ -8,7 +8,7 @@ function Header() {
     return (
         <AppBar position="static">
             <Toolbar>
-            <Link to="/">
+            <Link to="/home">
                 <Typography variant="h6" color="inherit">
                     Dashboard
                 </Typography>

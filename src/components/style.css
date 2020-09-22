@@ -11,6 +11,10 @@
   position: fixed;
 }
 
+.dashboard{
+  height: 200px;
+}
+
 .logo {
   height: 25px;
   width: 25px;
