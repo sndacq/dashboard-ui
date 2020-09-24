@@ -2,6 +2,7 @@ module.exports = {
   env: {
     browser: true,
     node: true,
+    jest: true,
   },
   extends: [
     'plugin:react/recommended',
@@ -23,5 +24,6 @@ module.exports = {
     ],
     'no-param-reassign': [
       'error', { props: true, ignorePropertyModificationsFor: ['state'] }],
+    'linebreak-style': 0,
   },
 };
