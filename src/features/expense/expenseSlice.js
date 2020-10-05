@@ -18,13 +18,13 @@ const expenseSlice = createSlice({
     dialog: {
       value: false,
     },
-    categories: [],
-    accounts: [],
+    categories: {},
+    accounts: {},
   },
   reducers: {
     updateExpenseList(state, action) {
       const data = action.payload;
-      data.map((element) => state.list.push(element));
+      state.list = data;
     },
     addExpense(state, action) {
       const data = action.payload;
@@ -42,11 +42,15 @@ const expenseSlice = createSlice({
     },
     updateCategoryList(state, action) {
       const data = action.payload;
-      data.map((element) => state.categories.push(element));
+      data.forEach((category) => {
+        state.categories[category.id] = category.name;
+      });
     },
     updateAccountList(state, action) {
       const data = action.payload;
-      data.map((element) => state.accounts.push(element));
+      data.forEach((account) => {
+        state.accounts[account.id] = account.name;
+      });
     },
     showDialog(state, action) {
       const { effect, activeItem } = action.payload;

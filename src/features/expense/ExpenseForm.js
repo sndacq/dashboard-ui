@@ -24,16 +24,16 @@ function ExpenseForm(props) {
   const { data } = props;
   const dispatch = useDispatch();
 
-  const categoryList = useSelector(selectCategory);
-  const accountList = useSelector(selectAccount);
+  const categories = useSelector(selectCategory);
+  const accounts = useSelector(selectAccount);
 
   const today = new Date().toISOString().split('T')[0];
   const initialState = (data === false)
     ? {
       date: today,
-      amount: '0.00',
-      account: accountList[0].id,
-      category: categoryList[0].id,
+      amount: '',
+      account: '',
+      category: '',
       expense_type: '1',
     } : { ...data };
 
@@ -89,9 +89,9 @@ function ExpenseForm(props) {
             value={state.category}
             onChange={handleFormChange}
           >
-            {categoryList.map((category) => (
-              <MenuItem value={category.id}>
-                {category.name}
+            {Object.keys(categories).map((key) => (
+              <MenuItem value={key} key={key}>
+                {categories[key]}
               </MenuItem>
             ))}
           </Select>
@@ -106,9 +106,9 @@ function ExpenseForm(props) {
             value={state.account}
             onChange={handleFormChange}
           >
-            {accountList.map((account) => (
-              <MenuItem value={account.id}>
-                {account.name}
+            {Object.keys(accounts).map((key) => (
+              <MenuItem value={key} key={key}>
+                {accounts[key]}
               </MenuItem>
             ))}
           </Select>

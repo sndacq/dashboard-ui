@@ -1,38 +1,78 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Card, CardContent } from '@material-ui/core';
-import { Line } from 'react-chartjs-2';
+import { Grid } from '@material-ui/core';
+import { Line, Doughnut } from 'react-chartjs-2';
 
-import { selectExpense } from '../expense/expenseSlice';
+import { selectExpense, selectCategory } from '../expense/expenseSlice';
 
 function Dashboard() {
   const expenseList = useSelector(selectExpense);
-  const labels = expenseList.map((d) => d.date);
-  const data = expenseList.map((d) => d.amount);
-  const chartProperties = {
-    type: 'bar',
-    labels: labels.reverse(),
+  const categoryList = useSelector(selectCategory);
+
+  const expenseLabels = expenseList.map((d) => d.date);
+  const expenseData = expenseList.map((d) => d.amount);
+  const barChartProperties = {
+    labels: expenseLabels.reverse(),
     datasets: [{
       label: 'Expense',
-      data: data.reverse(),
+      data: expenseData.reverse(),
       fill: false,
       backgroundColor: 'blue',
       borderColor: 'gray',
     }],
   };
 
+  const categoryLabels = Object.keys(categoryList).map((c) => categoryList[c]);
+  const categorySum = expenseList.reduce((object, expense) => {
+    const { category, amount } = expense;
+    const totalDictionary = object;
+
+    if (totalDictionary[category] === undefined) {
+      totalDictionary[category] = 0;
+    }
+    totalDictionary[category] += parseFloat(amount);
+    return totalDictionary;
+  }, {});
+
+  const categoryData = Object.keys(categoryList).map((key) => {
+    if (categorySum[key] === undefined) {
+      return 0;
+    }
+    return categorySum[key];
+  });
+
+  const doughnutChartProperties = {
+    labels: categoryLabels,
+    datasets: [{
+      label: 'Categories',
+      backgroundColor: [
+        'blue',
+        'red',
+        'yellow',
+        'green',
+        'orange',
+      ],
+      data: categoryData,
+    }],
+  };
+
   return (
-    <Card container>
-      <CardContent>
+    <Grid container className="dashboard-card">
+      <Grid item xs={8}>
         <Line
-          data={chartProperties}
+          data={barChartProperties}
           options={{
             responsive: true,
-            maintainAspectRatio: true,
+            maintainAspectRatio: false,
           }}
         />
-      </CardContent>
-    </Card>
+      </Grid>
+      <Grid item xs={4}>
+        <Doughnut
+          data={doughnutChartProperties}
+        />
+      </Grid>
+    </Grid>
   );
 }
 

@@ -1,18 +1,21 @@
-.main-body {
-  padding-top: 64px;
-  padding-bottom: 45px;
+.main {
+  display: flex;
+  flex-direction: column;
+}
+
+.body {
+  min-height: 100vh;
 }
 
 .footer {
   background-color: #f1f1f1;
-  /* margin-top: auto; */
+  margin-top: auto;
   bottom: 0;
   height: 45px;
-  position: fixed;
 }
 
-.dashboard{
-  height: 200px;
+.dashboard-card {
+  min-height: 350px;
 }
 
 .logo {

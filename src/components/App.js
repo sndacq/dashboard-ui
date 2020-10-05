@@ -29,25 +29,29 @@ function App() {
   });
 
   return (
-    <Router>
-      <Header />
-      <Switch>
-        <Route path="/home">
-          <Dashboard />
-        </Route>
-        <Route path="/expenses">
-          <Expenses />
-        </Route>
-        <Route path="/nutrition">
-          <Nutrition />
-        </Route>
-        <Route path="/mood">
-          <Mood />
-        </Route>
-      </Switch>
-      <AlertNotification />
-      <Footer />
-    </Router>
+    <div className="main">
+      <Router>
+        <Header className="header" />
+        <div className="body">
+          <Switch>
+            <Route exact path="/">
+              <Dashboard />
+            </Route>
+            <Route path="/expenses">
+              <Expenses />
+            </Route>
+            <Route path="/nutrition">
+              <Nutrition />
+            </Route>
+            <Route path="/mood">
+              <Mood />
+            </Route>
+          </Switch>
+        </div>
+        <AlertNotification />
+        <Footer />
+      </Router>
+    </div>
   );
 }
 

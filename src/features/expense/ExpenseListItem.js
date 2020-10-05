@@ -19,14 +19,8 @@ function ExpenseListItem(props) {
 
   const dispatch = useDispatch();
 
-  const categoryList = useSelector(selectCategory);
-  const accountList = useSelector(selectAccount);
-
-  const accountDictionary = {};
-  accountList.map((account) => Object.assign(accountDictionary[account.id], account.name));
-
-  const categoryDictionary = {};
-  categoryList.map((category) => Object.assign(accountDictionary[category.id], category.name));
+  const categoryDictionary = useSelector(selectCategory);
+  const accountDictionary = useSelector(selectAccount);
 
   const expenseType = {
     0: 'Income',
