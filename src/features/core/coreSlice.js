@@ -7,6 +7,7 @@ const coreSlice = createSlice({
       value: false,
       message: '',
     },
+    backdrop: false,
   },
   reducers: {
     showAlertNotification(state, action) {
@@ -21,14 +22,23 @@ const coreSlice = createSlice({
         message: '',
       };
     },
+    showBackdrop(state) {
+      state.backdrop = true;
+    },
+    hideBackdrop(state) {
+      state.backdrop = false;
+    },
   },
 });
 
 export const {
   showAlertNotification,
   hideAlertNotification,
+  showBackdrop,
+  hideBackdrop,
 } = coreSlice.actions;
 
 export const selectAlert = (state) => state.core.alertNotification;
+export const selectBackdrop = (state) => state.core.backdrop;
 
 export default coreSlice.reducer;

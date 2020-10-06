@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { showAlertNotification } from '../core/coreSlice';
+import { hideBackdrop, showAlertNotification } from '../core/coreSlice';
 
 import {
   getExpense,
@@ -81,18 +81,19 @@ export const {
   hideDialog,
 } = expenseSlice.actions;
 
-export const fetchExpenseApi = () => (dispatch) => {
-  getExpense()
+export const fetchExpenseApi = () => async (dispatch) => {
+  await getExpense()
     .then((res) => {
       dispatch(updateExpenseList(res));
     })
     .catch(() => {
       dispatch(showAlertNotification('Failed to fetch expenses'));
     });
+  dispatch(hideBackdrop());
 };
 
-export const addExpenseApi = (formData) => (dispatch) => {
-  createExpense(formData)
+export const addExpenseApi = (formData) => async (dispatch) => {
+  await createExpense(formData)
     .then((res) => {
       dispatch(addExpense({
         ...res,
@@ -103,10 +104,11 @@ export const addExpenseApi = (formData) => (dispatch) => {
     .catch(() => {
       dispatch(showAlertNotification('Failed to create entry'));
     });
+  dispatch(hideBackdrop());
 };
 
-export const editExpenseApi = (formData) => (dispatch) => {
-  updateExpense(formData)
+export const editExpenseApi = (formData) => async (dispatch) => {
+  await updateExpense(formData)
     .then(() => {
       dispatch(editExpense(formData));
       dispatch(showAlertNotification('Entry succesfully updated'));
@@ -114,10 +116,11 @@ export const editExpenseApi = (formData) => (dispatch) => {
     .catch(() => {
       dispatch(showAlertNotification('Failed to update entry'));
     });
+  dispatch(hideBackdrop());
 };
 
-export const deleteExpenseApi = (id) => (dispatch) => {
-  deleteExpense(id)
+export const deleteExpenseApi = (id) => async (dispatch) => {
+  await deleteExpense(id)
     .then(() => {
       dispatch(removeExpense(id));
       dispatch(showAlertNotification('Entry succesfully deleted'));
@@ -125,26 +128,29 @@ export const deleteExpenseApi = (id) => (dispatch) => {
     .catch(() => {
       dispatch(showAlertNotification('Failed to delete entry'));
     });
+  dispatch(hideBackdrop());
 };
 
-export const fetchCategoryApi = () => (dispatch) => {
-  getCategory()
+export const fetchCategoryApi = () => async (dispatch) => {
+  await getCategory()
     .then((res) => {
       dispatch(updateCategoryList(res));
     })
     .catch(() => {
       dispatch(showAlertNotification('Failed to fetch categories'));
     });
+  dispatch(hideBackdrop());
 };
 
-export const fetchAccountApi = () => (dispatch) => {
-  getAccount()
+export const fetchAccountApi = () => async (dispatch) => {
+  await getAccount()
     .then((res) => {
       dispatch(updateAccountList(res));
     })
     .catch(() => {
       dispatch(showAlertNotification('Failed to fetch accounts'));
     });
+  dispatch(hideBackdrop());
 };
 
 export const selectExpense = (state) => state.expenses.list;

@@ -4,7 +4,7 @@
 }
 
 .body {
-  min-height: 100vh;
+  min-height: 83vh;
 }
 
 .footer {
@@ -31,4 +31,9 @@
 a {
   text-decoration: none !important;
   color: inherit !important;
+}
+
+.backdrop {
+  z-index: 999;
+  color: #fff;
 }
